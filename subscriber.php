@@ -6,9 +6,6 @@
 * Author: Joakim & Mikael
 **/
 
-echo 'Newsletter is active: '.get_option('subscriber_isactive_checkbox');
-echo '<br /><br />';
-echo 'Selected list id: '.get_option('subscriber_select_list');
 function my_plugin_subscriber_newsletter() {
 	add_menu_page('My Plugin Settings', 'Subscriber settings', 'administrator', 'my-subscriber-newsletter-settings-plugin', 'my_subscriber_newsletter_settings_page', 'dashicons-admin-generic');
 }
@@ -94,20 +91,42 @@ add_action( 'admin_init', 'my_plugin_settings' );
 add_action('admin_menu', 'my_plugin_subscriber_newsletter');
 
 // Ajax call
+add_action( 'wp_ajax_ajax_subscribersubmit', 'ajax_subscribersubmit' );
+add_action( 'wp_ajax_nopriv_ajax_subscribersubmit', 'ajax_subscribersubmit' );
 
-add_action( 'wp_ajax_ajax-subscribersubmit', 'myajax_subscriber_submit_func' );
-add_action( 'wp_ajax_nopriv_ajax-subscribersubmit', 'myajax_subscriber_submit_func' );
 
-
-function myajax_subscriber_submit_func(){
-
+function ajax_subscribersubmit(){
 
 	// Check Mailchimp current settings
 	if(get_option('subscriber_isactive_checkbox') == 'on'){
 
 		$currentSubscriberListID = get_option('subscriber_select_list');
 
+		require_once('src/Drewm/MailChimp.php');
+		$MailChimp = new \Drewm\MailChimp('b08e782231147b0c03d797cd924f007d-us9');
+		
+		$result = $MailChimp->call('lists/subscribe', array(
+		    'id'                => $currentSubscriberListID,
+		    'email'             => array('email'=> $_POST['email']),
+		    'merge_vars'        => array('FNAME'=> $_POST['name']),
+		    'double_optin'      => false,
+		    'update_existing'   => true,
+		    'replace_interests' => false,
+		    'send_welcome'      => false,
+		));
+
+		if( $result['leid'] ){
+
+			// JSON Response
+			header('Content-Type: application/json');
+			echo json_encode($result);
+		} else {
+			header('Content-Type: application/json');
+			echo json_encode(array('error' => 'true'));
+		}
 	}
+
+	die();
 }
 
 function display_form() {
@@ -156,17 +175,14 @@ function display_form() {
 					var a 	= "#TB_inline?width=625&amp;height=250&amp;inlineId=newsletter-thickbox";
 					var g 	= false;
 					tb_show(t, a, g);
-				}, 1000);
+				}, <?php echo get_option('subscriber_form_delay'); ?>);
 			}
 
 			// Handle form submission
-			jQuery('form#mailchimp-subscribe').submit(function( event ){
+			jQuery('form').submit(function( event ){
 
 				// Prevent submision
 				event.preventDefault();
-
-				// Disable submit button
-				jQuery('#mailchimp-submit-button').disable();
 
 				// Collect vars
 				var form 	= jQuery(this);
@@ -174,9 +190,9 @@ function display_form() {
 				var name 	= jQuery('input[name=name]', form).val();
 				var email 	= jQuery('input[name=email]', form).val();
 				var formData = {
-					'action': 	'myajax_subscriber_submit_func',
-					'name': 	name,
-					'email': 	email
+					action:  'ajax_subscribersubmit',
+					name: 	name,
+					email: 	email
 				};
 
 				// Validate email
@@ -187,27 +203,28 @@ function display_form() {
 					return false;
 				}
 
-				// Make Ajax call
-				jQuery.post( action, formData, function( data ){
-					if( data.status == 'error' ){
+				jQuery.ajax({
+					url: action,
+					data: formData,
+					method: 'post',
+					success: function( response ) {
+						if( response.leid ){
 
-						// Enable submit button
-						jQuery('#mailchimp-submit-button').enable();
-						
-						// Show error message
-						jQuery('#newsletter-thickbox-content .form').hide();
-						jQuery('#newsletter-thickbox-content .error').show();
-					} else {
+							// Thank you message
+							jQuery('#newsletter-thickbox-content .form').hide();
+							jQuery('#newsletter-thickbox-content .thank-you .email-placeholder').text( email );
+							jQuery('#newsletter-thickbox-content .thank-you').show();
 
-						// Thank you message
-						jQuery('#newsletter-thickbox-content .form').hide();
-						jQuery('#newsletter-thickbox-content .thank-you .email-placeholder').text( email );
-						jQuery('#newsletter-thickbox-content .thank-you').show();
-
-						// Set permanent cookie
-						createCookie('AshleyCooper-VisitorSubsribed', 'set', 3650);
+							// Set permanent cookie
+							createCookie('AshleyCooper-VisitorSubsribed', 'set', 3650);
+						} else {
+							
+							// Show error message
+							jQuery('#newsletter-thickbox-content .form').hide();
+							jQuery('#newsletter-thickbox-content .error').show();
+						}
 					}
-				}, "json");
+				});
 			});
 		});
 	</script>
@@ -246,7 +263,7 @@ function display_form() {
 
 	     	<!-- Form -->
 	     	<div class="form">
-		     	<h1>Subscribe to my monthly newsletter!</h1>
+		     	<h1><?php echo get_option('subscriber_form_heading'); ?></h1>
 
 		     	<!-- Alert box -->
 		     	<div class="alert" style="display: none;"><p></p></div>
