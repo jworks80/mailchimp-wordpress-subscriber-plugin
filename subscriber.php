@@ -62,13 +62,12 @@ function my_subscriber_newsletter_settings_page(){
 	    <hr />
 	    <h3>Mailchimp subscription form options</h3>
 	    <label for="subscriber_form_heading" style="padding-right:5px;">Subscriber form heading</label>
-	    <input type="text" id="subscriber_form_heading" name="subscriber_form_heading" value="<?php echo get_option('subscriber_form_heading'); ?>" />
+	    <input type="text" id="subscriber_form_heading" name="subscriber_form_heading" value="<?php echo ( get_option('subscriber_form_heading') ? get_option('subscriber_form_heading') : 'Subscribe to my newsletter'); ?>" />
 	    <br />
 	    <br />
-	    <label for="subscriber_form_delay" style="padding-right:5px;">Subscriber form delay</label>
-	   <input type="text" id="subscriber_form_delay" name="subscriber_form_delay" value="<?php echo get_option('subscriber_form_delay'); ?>" />
+	    <label for="subscriber_form_delay" style="padding-right:5px;">Subscriber form delay (ms)</label>
+	   <input type="text" id="subscriber_form_delay" name="subscriber_form_delay" value="<?php echo (get_option('subscriber_form_delay') ? get_option('subscriber_form_delay') : 5000 ); ?>" />
 
-	    
 	    <?php submit_button(); ?>
 	 
 	</form>
@@ -98,7 +97,7 @@ add_action( 'wp_ajax_nopriv_ajax_subscribersubmit', 'ajax_subscribersubmit' );
 function ajax_subscribersubmit(){
 
 	// Check Mailchimp current settings
-	if(get_option('subscriber_isactive_checkbox') == 'on'){
+	//if(get_option('subscriber_isactive_checkbox') == 'on'){
 
 		$currentSubscriberListID = get_option('subscriber_select_list');
 
@@ -124,7 +123,7 @@ function ajax_subscribersubmit(){
 			header('Content-Type: application/json');
 			echo json_encode(array('error' => 'true'));
 		}
-	}
+	//}
 
 	die();
 }
@@ -303,6 +302,8 @@ function display_form() {
 	<?php
 }
 
-add_action('wp_footer', 'display_form');
-
+// Display form if plugin is activated in settings
+if(get_option('subscriber_isactive_checkbox') == 'on'){
+	add_action('wp_footer', 'display_form');
+}
 ?>
