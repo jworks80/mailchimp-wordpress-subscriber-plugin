@@ -47,6 +47,7 @@ function my_subscriber_newsletter_settings_page(){
 		    	name="subscriber_isactive_checkbox" 
 		    	id="subscriber_isactive_checkbox" 
 		    	style="position:relative; top:2px"
+		    	value="on"
 		    	<?php echo get_option('subscriber_isactive_checkbox') == 'on' ? 'checked':''; ?> 
 		    /> <br />
 		</div>
@@ -512,8 +513,8 @@ function display_footer_form(){
 }
 
 // Display form if plugin is activated in settings
-/*if(get_option('subscriber_isactive_checkbox') == 'on'){
+if(get_option('subscriber_isactive_checkbox') == 'on'){
 	//add_action('wp_footer', 'display_form');
 	add_action('wp_footer', 'display_footer_form');
-}*/
+}
 ?>
