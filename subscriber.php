@@ -22,73 +22,144 @@ function my_subscriber_newsletter_settings_page(){
 	require_once('src/Drewm/MailChimp.php');
 
 	// Your Mailchimp API Key 
-	$api = 'b08e782231147b0c03d797cd924f007d-us9'; 
+	$api = 'b08e782231147b0c03d797cd924f007d-us9';
 	
 	// Initializing the $MailChimp object
 	$MailChimp = new \Drewm\MailChimp($api);
 	$lists = $MailChimp->call('lists/list', array(
 	  "filters" => array(),
 	  "sort_dir" => "DESC"
-	));
-
-?>
+	)); ?>
+	
 	<div class="wrap">
-	<h2>Subscriber Mailchimp settings</h2>
-	 
-	<form method="post" action="options.php">
-
-	    <?php settings_fields( 'my-plugin-settings-group' ); ?>
-	    <?php do_settings_sections( 'my-plugin-settings-group' ); ?>
-
-	    <h3>Mailchimp options</h3>
-	    <div style="margin-bottom:10px;">
-		    <label for="subscriber_isactive_checkbox" style="padding-right:5px;">Subscriber Newsletter ON/OFF</label>
-		    <input type="checkbox" 
-		    	name="subscriber_isactive_checkbox" 
-		    	id="subscriber_isactive_checkbox" 
-		    	style="position:relative; top:2px"
-		    	value="on"
-		    	<?php echo get_option('subscriber_isactive_checkbox') == 'on' ? 'checked':''; ?> 
-		    /> <br />
+		
+		<div class="header">
+			<h2>Subscriber Mailchimp settings</h2>
 		</div>
 
-		<label style="padding-right:5px;">Choose Mailchimp subscriberlist</label>
- 		<select name="subscriber_select_list">
-			<?php
-			$selected = '';
-			foreach ($lists['data'] as $list) {
-				if($list['id'] == get_option('subscriber_select_list')):
-					$selected = ' selected';
-				else:
-					$selected = '';
-				endif;
-	    		echo '<option value="'.$list['id'].'"'.$selected.'>'.$list['name'].'</option>';
-			}
-			?>
-	    </select>
+		<div class="content">
+			<form method="post" action="options.php">
 
-	    <hr />
-	    <h3>Mailchimp subscription form options</h3>
-	    <label for="subscriber_form_heading" style="padding-right:5px;">Subscriber form heading</label>
-	    <input type="text" id="subscriber_form_heading" name="subscriber_form_heading" value="<?php echo ( get_option('subscriber_form_heading') ? get_option('subscriber_form_heading') : 'Subscribe to my newsletter'); ?>" />
-	    <br />
-	    <br />
-	    <label for="subscriber_form_delay" style="padding-right:5px;">Subscriber form delay (ms)</label>
-	   <input type="text" id="subscriber_form_delay" name="subscriber_form_delay" value="<?php echo (get_option('subscriber_form_delay') ? get_option('subscriber_form_delay') : 5000 ); ?>" />
+		    	<?php settings_fields( 'my-plugin-settings-group' ); ?>
+		    	<?php do_settings_sections( 'my-plugin-settings-group' ); ?>
 
-	    <?php submit_button(); ?>
-	 
-	</form>
+			    <h3>Options</h3>
+			    
+			    <?php // Enable footer form checkbox ?>
+			    <p>
+				    <label for="subscriber_isactive_checkbox" style="padding-right:5px;">Enable footer signup</label>
+				    <input type="checkbox" 
+				    	name="subscriber_isactive_checkbox" 
+				    	id="subscriber_isactive_checkbox" 
+				    	style="position:relative; top:2px"
+				    	value="on"
+				    	<?php echo get_option('subscriber_isactive_checkbox') == 'on' ? 'checked':''; ?> 
+				    />
+				</p>
+			    
+			    <?php // Enable popup form checkbox ?>
+			    <?php /*<p>
+				    <label for="subscriber_popup_isactive_checkbox" style="padding-right:5px;">Enable popup signup</label>
+				    <input type="checkbox" 
+				    	name="subscriber_popup_isactive_checkbox" 
+				    	id="subscriber_popup_isactive_checkbox" 
+				    	style="position:relative; top:2px"
+				    	value="on"
+				    	<?php echo get_option('subscriber_popup_isactive_checkbox') == 'on' ? 'checked':''; ?> 
+				    />
+				</p>
+
+				<hr>*/ ?>
+				
+				<?php /* Form heading */ ?>
+		    	<p>
+		    		<label for="subscriber_form_heading" style="padding-right:5px;">Subscriber form heading</label>
+		    		<input type="text" id="subscriber_form_heading" name="subscriber_form_heading" value="<?php echo ( get_option('subscriber_form_heading') ? get_option('subscriber_form_heading') : 'Subscribe to my newsletter'); ?>" style="width: 300px;" />
+		    	</p>
+
+		    	<hr>
+				
+				<?php // Signup form #1 ?>
+				<p>
+					<label style="padding-right:5px;" for="subscriber_select_list_1">Choose Mailchimp subscriberlist #1</label>
+			 		<select name="subscriber_select_list_1" id="subscriber_select_list_1">
+			 			<option value="">- None -</option>
+						<?php
+							$selected = '';
+							foreach ($lists['data'] as $list) {
+								if($list['id'] == get_option('subscriber_select_list_1')):
+									$selected = ' selected';
+								else:
+									$selected = '';
+								endif;
+					    		echo '<option value="'.$list['id'].'"'.$selected.'>'.$list['name'].'</option>';
+							}
+						?>
+				    </select>
+				    <i>If only this list is selected, no checkboxes will show in signup form.</i>
+			    <p>
+				
+				<?php // Signup form #2 ?>
+				<p>
+					<label style="padding-right:5px;" for="subscriber_select_list_2">Choose Mailchimp subscriberlist #2</label>
+					<select name="subscriber_select_list_2" id="subscriber_select_list_2">
+						<option value="">- None -</option>
+						<?php
+							$selected = '';
+							foreach ($lists['data'] as $list) {
+								if($list['id'] == get_option('subscriber_select_list_2')):
+									$selected = ' selected';
+								else:
+									$selected = '';
+								endif;
+					    		echo '<option value="'.$list['id'].'"'.$selected.'>'.$list['name'].'</option>';
+							}
+						?>
+				    </select>
+				</p>
+				
+				<?php // Signup form #3 ?>
+				<p>
+					<label style="padding-right:5px;" for="subscriber_select_list_3">Choose Mailchimp subscriberlist #3</label>
+					<select name="subscriber_select_list_3" id="subscriber_select_list_3">
+						<option value="">- None -</option>
+						<?php
+							$selected = '';
+							foreach ($lists['data'] as $list) {
+								if($list['id'] == get_option('subscriber_select_list_3')):
+									$selected = ' selected';
+								else:
+									$selected = '';
+								endif;
+					    		echo '<option value="'.$list['id'].'"'.$selected.'>'.$list['name'].'</option>';
+							}
+						?>
+				    </select>
+				</p>
+
+				<hr>
+		    	
+		    	<?php // Popup delay ?>
+		    	<?php /*<label for="subscriber_form_delay" style="padding-right:5px;">Subscriber form delay (ms)</label>
+		   		<input type="text" id="subscriber_form_delay" name="subscriber_form_delay" value="<?php echo (get_option('subscriber_form_delay') ? get_option('subscriber_form_delay') : 5000 ); ?>" style="width: 75px;" />
+		   	
+		   		<hr>*/ ?>
+
+		    	<?php submit_button(); ?>
+		 
+			</form>
+		</div>
 	</div>
-
-
 
 <?php 
 }
 
 function my_plugin_settings() {
 	register_setting( 'my-plugin-settings-group', 'subscriber_isactive_checkbox' );
-	register_setting( 'my-plugin-settings-group', 'subscriber_select_list' );
+	register_setting( 'my-plugin-settings-group', 'subscriber_popup_isactive_checkbox' );
+	register_setting( 'my-plugin-settings-group', 'subscriber_select_list_1' );
+	register_setting( 'my-plugin-settings-group', 'subscriber_select_list_2' );
+	register_setting( 'my-plugin-settings-group', 'subscriber_select_list_3' );
 	register_setting( 'my-plugin-settings-group', 'subscriber_form_heading' );
 	register_setting( 'my-plugin-settings-group', 'subscriber_form_delay' );
 }
@@ -104,30 +175,54 @@ add_action( 'wp_ajax_nopriv_ajax_subscribersubmit', 'ajax_subscribersubmit' );
 
 function ajax_subscribersubmit(){
 
-	// Check Mailchimp current settings
-	$currentSubscriberListID = get_option('subscriber_select_list');
+	//echo json_encode(array( 'success' => false ));
+	//die();
 
+	// Check Mailchimp current settings
+	//$currentSubscriberListID = get_option('subscriber_select_list_1');
+
+	// Connect to the API
 	require_once('src/Drewm/MailChimp.php');
 	$MailChimp = new \Drewm\MailChimp('b08e782231147b0c03d797cd924f007d-us9');
+
+	// Loop subscriptions
+	//$success = false;
+	$subscriptions 		= $_POST['subscriptions'];
+	//$success_counter 	= 0;
+	foreach( $subscriptions as $subscription ){
+
+		// Make the call
+		$result = $MailChimp->call('lists/subscribe', array(
+		    //'id'                => $currentSubscriberListID,
+		    //'id'                => $subscription['value'],
+		    'id'                => $subscription,
+		    'email'             => array('email'=> $_POST['email']),
+		    'merge_vars'        => array('FNAME'=> $_POST['name']),
+		    'double_optin'      => false,
+		    'update_existing'   => true,
+		    'replace_interests' => false,
+		    'send_welcome'      => false,
+		));
+
+		if( $result['leid'] ){
+			//$success = true;
+			//$success_counter++;
+			$results[] = $result;
+		}
+	}
 	
-	$result = $MailChimp->call('lists/subscribe', array(
-	    'id'                => $currentSubscriberListID,
-	    'email'             => array('email'=> $_POST['email']),
-	    'merge_vars'        => array('FNAME'=> $_POST['name']),
-	    'double_optin'      => false,
-	    'update_existing'   => true,
-	    'replace_interests' => false,
-	    'send_welcome'      => false,
-	));
+	// Set JSON headers
+	header( 'Content-Type: application/json' );
 
-	if( $result['leid'] ){
-
-		// JSON Response
-		header('Content-Type: application/json');
-		echo json_encode($result);
+	// Echo response
+	//if( $result['leid'] ){
+	//if( $success ){
+	//if( $success_counter > 0 ){
+	if( count($results) > 0 ){
+		//echo json_encode( $result );
+		echo json_encode(array( 'success' => true, 'response' => $results ));
 	} else {
-		header('Content-Type: application/json');
-		echo json_encode(array('error' => 'true'));
+		echo json_encode(array( 'success' => false, 'response' => $results ));
 	}
 
 	die();
@@ -310,37 +405,110 @@ function display_footer_form(){
 	// Register and enqueue Bootstrap
 	wp_register_script( 'bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js', 'jquery');
 	wp_enqueue_script( 'bootstrap' );
+
+	// Get list name from id
+	function getListName( $id ){
+		require_once('src/Drewm/MailChimp.php');
+
+		// Your Mailchimp API Key 
+		$api = 'b08e782231147b0c03d797cd924f007d-us9';
+		
+		// Initializing the $MailChimp object
+		$MailChimp = new \Drewm\MailChimp($api);
+		$lists = $MailChimp->call('lists/list', array(
+		  "filters" 	=> array(),
+		  "sort_dir" 	=> "DESC"
+		));
+
+		$list_name = '';
+		foreach( $lists['data'] as $list ){
+			if($list['id'] == $id){
+				$list_name = $list['name'];
+			}
+		}
+
+		return $list_name;
+	}
 ?>
 
 <script>
-	
-	//console.log('JS');
-	
-	//jQuery('[data-toggle="tooltip"]').tooltip('show');
-	//jQuery('[data-toggle="tooltip"]').tooltip('toggle');
-
 	jQuery(document).ready(function(){
-		//console.log('jQuery');
-		
+
+		// Trigger checkboxes
+		jQuery('#jm-mailchimp-subscribe .checkboxes input:checkbox').click(function(){
+			//console.log('click');
+			//var val = jQuery(this).val();
+			//console.log(val);
+			//jQuery(this).parent('li').toggleClass('active');
+			jQuery(this).closest('li').toggleClass('active');
+			//jQuery(this).toggleClass('active');
+		});
+
+		// Close validation message
+		jQuery('.close-validate-message').click(function(){
+			//console.log('click')
+			jQuery('#jm-mailchimp-subscribe form').show();
+			jQuery('#jm-mailchimp-subscribe .validate').hide();
+		});
+
+		//jQuery('#jm-mailchimp-subscribe form').hide();
+		//jQuery('#jm-mailchimp-subscribe .thank-you').show();
+		//jQuery('#jm-mailchimp-subscribe .error').show();
+		//jQuery('#jm-mailchimp-subscribe .validate').show();
+
 		jQuery('#jm-mailchimp-subscribe form').submit(function( event ){
+
+
+			var validate_note = jQuery('#jm-mailchimp-subscribe .validate');
+			var thank_you = jQuery('#jm-mailchimp-subscribe .thank-you');
+			var error = jQuery('#jm-mailchimp-subscribe .error');
 			
 			// Hide form
 			
 			// Show spinner
 
-			// Prevent submision
+			// Prevent submission
 			event.preventDefault();
 
+			subscriptions = [];
+			jQuery('input:checkbox[name=subscriptions]:checked, input:hidden[name=subscriptions]', form).each(function( index ){
+				if( jQuery(this).val() != '' ){
+					subscriptions.push( jQuery(this).val() );
+				}
+			});
+
+			//console.log(subscriptions);
+			//return false;
+
 			// Collect vars
-			var form 	= jQuery(this);
-			var action 	= form.attr('action');
-			var name 	= jQuery('input[name=name]', form).val();
-			var email 	= jQuery('input[name=email]', form).val();
-			var formData = {
+			var form 			= jQuery(this);
+			var action 			= form.attr('action');
+			//var subscriptions 	= jQuery('input[name=subscriptions]:checked', form);
+			//var subscriptions 	= [{value: '2192225b1d'}, {value: '096671b37c'}, {value: '06d9378dc0'}];
+			var name 			= jQuery('input[name=name]', form).val();
+			var email 			= jQuery('input[name=email]', form).val();
+			var formData 		= {
 				action: 'ajax_subscribersubmit',
+				subscriptions: subscriptions,
 				name: name,
 				email: email
 			};
+			
+			//return false;
+
+			//console.log( jQuery('input:checked', form).val() );
+			//console.log( jQuery('input[name=subscriptions]:checked', form).length );
+			//console.log(subscriptions);
+			//return false;
+			
+			// Validate subscriptions
+			if( subscriptions.length < 1 ){
+				//console.log( 'Please choose at least one subscription list' );
+				//console.log( subscriptions.length );
+				form.hide();
+				validate_note.show();
+				return false;
+			}
 
 			// Validate name
 			if(name.length < 2){
@@ -351,7 +519,10 @@ function display_footer_form(){
 				
 				// Show form
 				
-				console.log('Please enter your name');
+				//console.log('Please enter your name');
+				
+				form.hide();
+				validate_note.show();
 				
 				return false;
 			}
@@ -366,10 +537,16 @@ function display_footer_form(){
 				
 				// Show form
 				
-				console.log('Please enter a valid email address');
+				//console.log('Please enter a valid email address');
+				//
+				form.hide();
+				validate_note.show();
 				
 				return false;
 			}
+			
+			// Change submit button text
+			jQuery('.submit-button', form).val('Sending...');
 
 			// Send form
 			jQuery.ajax({
@@ -377,29 +554,42 @@ function display_footer_form(){
 				data: formData,
 				method: 'post',
 				success: function( response ) {
-					if( response.leid ){
+					//if( response.leid ){
+					if( response.success === true ){
 
 						// Remove spinner
 						
 						// Show thank you note
 
-						console.log('Thank you!');
+						//console.log( 'Thank you!' );
+						//console.log( response );
 
 						// Thank you message
 						//jQuery('#newsletter-thickbox-content .form').hide();
 						//jQuery('#newsletter-thickbox-content .thank-you .email-placeholder').text( email );
 						//jQuery('#newsletter-thickbox-content .thank-you').show();
+						
+						form.hide();
+						jQuery('.email-placeholder', thank_you).text(email);
+						thank_you.show();
 					} else {
 
-						// Remove spinne
+						// Remove spinner
 						
 						// Show error note
 
-						console.log('Could not send form. Try agian later.');
+						//console.log( 'Could not send form. Try agian later.' );
+						//console.log( response );
+
+						// Change submit button text
+						//jQuery('.submit-button', form).val('Send');
 						
 						// Show error message
 						//jQuery('#newsletter-thickbox-content .form').hide();
 						//jQuery('#newsletter-thickbox-content .error').show();
+						
+						form.hide();
+						error.show();
 					}
 				}
 			});
@@ -425,7 +615,9 @@ function display_footer_form(){
 	#jm-mailchimp-subscribe .text-input,
 	#jm-mailchimp-subscribe .text-input:focus,
 	#jm-mailchimp-subscribe .submit-button,
-	#jm-mailchimp-subscribe .submit-button:focus {
+	#jm-mailchimp-subscribe .submit-button:focus
+	/*#jm-mailchimp-subscribe .close-validate-message,
+	#jm-mailchimp-subscribe .close-validate-message:focus*/ {
 		width: 			100%;
 		border: 		1px solid #FFF;
 		background: 	transparent;
@@ -441,14 +633,69 @@ function display_footer_form(){
 	#jm-mailchimp-subscribe .text-input:focus {
 		border-right: none;
 	}
-	#jm-mailchimp-subscribe .submit-button {
+	#jm-mailchimp-subscribe .submit-button, 
+	#jm-mailchimp-subscribe .close-validate-message {
 		text-transform: uppercase;
 		cursor: 		pointer;
 	}
+
+	/* Checkboxes */
+	#jm-mailchimp-subscribe .checkboxes {
+		list-style: none;
+		padding-left: 0;
+	}
+	#jm-mailchimp-subscribe .checkboxes li {
+		display: inline-block;
+		height:  15px;
+		position: relative;
+		margin-right: 31px;
+		text-transform: uppercase;
+		font-size: 16px;
+	}
+	#jm-mailchimp-subscribe .checkboxes li:before {
+		height: 15px;
+		width: 15px;
+		border: 1px solid #FFF;
+		content: '';
+		display: inline-block;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		margin-right: 25px;
+		cursor: pointer;
+	}
+	#jm-mailchimp-subscribe .checkboxes li.active:before {
+		background: #FFF;
+	}
+	#jm-mailchimp-subscribe .checkboxes li label {
+		margin-left: 25px;
+		cursor: pointer;
+	}
+	#jm-mailchimp-subscribe .checkboxes input {
+		display: none;
+	}
+
+	/* Columns */
 	#jm-mailchimp-subscribe .col-sm-5,
 	#jm-mailchimp-subscribe .col-sm-2{
 		padding: 0;
 	}
+
+	#jm-mailchimp-subscribe .close-validate-message{
+		display: inline-block;
+		width: 67px;
+		margin-left: 10px;
+		border: 		1px solid #FFF;
+		background: 	transparent;
+		color: 			#FFF;
+		margin: 		0;
+		padding: 		10px 15px;
+		height: 		37px;
+		line-height: 	15px;
+		box-shadow: 	none;
+		outline: 		none;
+	}
+
 
 	/* Placeholder style */
 	/*::-webkit-input-placeholder,
@@ -471,9 +718,63 @@ function display_footer_form(){
 				<input type="hidden" name="register">
 				
 				<?php // Heading ?>
-				<div class="col-md-5"><h1><?php echo get_option('subscriber_form_heading'); ?></h1></div>
+				<div class="col-lg-12">
+					<h1><?php echo get_option('subscriber_form_heading'); ?></h1>
+				</div>
 
-				<div class="col-md-7">
+				<div class="col-lg-6">
+
+					<?php
+						$list1_id = get_option( 'subscriber_select_list_1' );
+						$list2_id = get_option( 'subscriber_select_list_2' );
+						$list3_id = get_option( 'subscriber_select_list_3' );
+					?>
+					
+					<?php // Only first list selected; show no checkboxes! ?>
+					<?php if( $list1_id && ( !$list2_id && !$list3_id ) ){ ?>
+							<?php /*<input type="hidden" name="list1_id" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>">*/ ?>
+							<input type="hidden" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>">
+					<?php } else { ?>
+						<ul class="checkboxes">
+								
+							<?php // List #1 ?>
+							<?php if(get_option( 'subscriber_select_list_1' )){ ?>
+							<li>
+								<label for="list1_id">
+									<?php /*<input type="checkbox" name="list1_id" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>"> */?>
+									<input type="checkbox" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>" class="checkbox">
+									<?php echo getListName(get_option( 'subscriber_select_list_1' )); ?>
+								</label>
+							</li>
+							<?php } ?>
+
+							<?php // List #2 ?>
+							<?php if(get_option( 'subscriber_select_list_2' )){ ?>
+							<li>
+								<label for="list2_id">
+									<?php /*<input type="checkbox" name="list2_id" id="list2_id" value="<?php echo get_option('subscriber_select_list_2'); ?>">*/ ?>
+									<input type="checkbox" name="subscriptions" id="list2_id" value="<?php echo get_option('subscriber_select_list_2'); ?>" class="checkbox">
+									<?php echo getListName(get_option( 'subscriber_select_list_2' )); ?>
+								</label>
+							</li>
+							<?php } ?>
+					
+							<?php // List #3 ?>
+							<?php if(get_option( 'subscriber_select_list_3' )){ ?>
+							<li>
+								<label for="list3_id">
+									<?php /*<input type="checkbox" name="list3_id" id="list3_id" value="<?php echo get_option('subscriber_select_list_3'); ?>">*/ ?>
+									<input type="checkbox" name="subscriptions" id="list3_id" value="<?php echo get_option('subscriber_select_list_3'); ?>" class="checkbox">
+									<?php echo getListName(get_option( 'subscriber_select_list_3' )); ?>
+								</label>
+							</li>
+							<?php } ?>
+
+						</ul>
+					<?php } ?>
+				</div>
+
+				<div class="col-lg-6">
 					<div class="row">
 
 						<?php // Name ?>
@@ -483,7 +784,7 @@ function display_footer_form(){
 
 						<?php // Email ?>
 						<div class="col-sm-5">
-							<input type="email" name="email" placeholder="Email" class="text-input">
+							<input type="email" name="email" placeholder="Email" class="text-input" data-toggle="tooltip" data-placement="top" title="Please enter your email!">
 						</div>
 
 						<?php // Button ?>
@@ -504,6 +805,12 @@ function display_footer_form(){
 			<div class="error" style="display: none;">
 				<h1>Oops!</h1>
 				<p>There was a technical error. Try again later.</p>
+			</div>
+
+			<?php // Validation note ?>
+			<div class="validate" style="display: none;">
+				<h1>Please fill in a subscription list, name and an email address!
+				<a href="javascript:;" class="close-validate-message">OK</a></h1>
 			</div>
 		</div>
 	</div>
