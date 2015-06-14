@@ -409,7 +409,7 @@ Register and mount CSS & Javascript
 
 function jm_mailchimp_register_style(){
 	
-	wp_register_style( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.css'), array(), '1.0', 'all' );
+	wp_register_style( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.css'), array(), '1.1', 'all' );
 	wp_register_script( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.js'), array('jquery'), '1.0', true );
 	
 	wp_enqueue_style( 'mailchimp-subscriber' );
@@ -486,11 +486,8 @@ function display_footer_form(){
 							<?php // List #1 ?>
 							<?php if(get_option( 'subscriber_select_list_1' )){ ?>
 							<li>
-								<label for="list1_id">
-									<?php /*<input type="checkbox" name="list1_id" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>"> */?>
-									<input type="checkbox" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>" class="checkbox">
-									<?php echo getListName(get_option( 'subscriber_select_list_1' )); ?>
-								</label>
+								<input type="checkbox" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>" class="checkbox">
+								<label for="list1_id"><?php echo getListName(get_option( 'subscriber_select_list_1' )); ?></label>
 							</li>
 							<?php } ?>
 
