@@ -413,8 +413,8 @@ Register and mount CSS & Javascript
 
 function jm_mailchimp_register_script(){
 	
-	wp_register_style( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.css'), array(), '1.2', 'all' );
-	wp_register_script( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.js'), array('jquery'), '1.0', true );
+	wp_register_style( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.css'), array(), '1.3', 'all' );
+	wp_register_script( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.js'), array('jquery'), '1.1', true );
 	wp_register_script( 'bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js', 'jquery', null, true);
 	
 	wp_enqueue_style( 'mailchimp-subscriber' );
@@ -424,43 +424,33 @@ function jm_mailchimp_register_script(){
 add_action('wp_enqueue_scripts', 'jm_mailchimp_register_script');
 
 
-/* --------------------------------
+// Get list name from id
+function getListName( $id ){
+	require_once('src/Drewm/MailChimp.php');
 
-Footer form HTML 
-
---------------------------------- */
-
-function jm_mailchimp_subscribe_form(){
-
-	// Get list name from id
-	function getListName( $id ){
-		require_once('src/Drewm/MailChimp.php');
-
-		// Your Mailchimp API Key 
-		$api = 'b08e782231147b0c03d797cd924f007d-us9';
-		
-		// Initializing the $MailChimp object
-		$MailChimp = new \Drewm\MailChimp($api);
-		$lists = $MailChimp->call('lists/list', array(
-		  "filters" 	=> array(),
-		  "sort_dir" 	=> "DESC"
-		));
-
-		$list_name = '';
-		foreach( $lists['data'] as $list ){
-			if($list['id'] == $id){
-				$list_name = $list['name'];
-			}
-		}
-
-		return $list_name;
-	}
+	// Your Mailchimp API Key 
+	$api = 'b08e782231147b0c03d797cd924f007d-us9';
 	
-	// Display form if activated in admin
-	if(get_option('subscriber_isactive_checkbox') == 'on'){
-?>
+	// Initializing the $MailChimp object
+	$MailChimp = new \Drewm\MailChimp($api);
+	$lists = $MailChimp->call('lists/list', array(
+	  "filters" 	=> array(),
+	  "sort_dir" 	=> "DESC"
+	));
 
-<div id="jm-mailchimp-subscribe">
+	$list_name = '';
+	foreach( $lists['data'] as $list ){
+		if($list['id'] == $id){
+			$list_name = $list['name'];
+		}
+	}
+
+	return $list_name;
+}
+
+
+function form(){ ?>
+<div class="jm-mailchimp-subscribe">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
@@ -564,10 +554,42 @@ function jm_mailchimp_subscribe_form(){
 		</div>
 	</div>
 </div>
+<?php }
 
-<?php
+/* --------------------------------
+
+Footer form HTML 
+
+--------------------------------- */
+
+function jm_mailchimp_subscribe_form(){
+	
+	// Display form if activated in admin
+	if(get_option('subscriber_isactive_checkbox') == 'on'){
+		form();
 	}
 }
+
+function jm_mailchimp_subscribe_form2(){
+	
+	// Display form if activated in admin
+	if(get_option('subscriber_isactive_checkbox') == 'on'){
+		form();
+	}
+}
+
+function init_shortcode_form(){
+	// Display form if activated in admin
+	ob_start();
+	jm_mailchimp_subscribe_form2();
+	return ob_get_clean();
+}
+
+function register_shortcodes(){
+	add_shortcode('subscriber_shortcode', 'init_shortcode_form');
+}
+
+add_action('init', 'register_shortcodes');
 
 // Display form if plugin is activated in settings
 /*if(get_option('subscriber_isactive_checkbox') == 'on'){

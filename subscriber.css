@@ -1,4 +1,4 @@
-#jm-mailchimp-subscribe { 
+.jm-mailchimp-subscribe { 
 	background-color: 	#82F5D0;
 	color: 				#FFF;
 	padding: 			20px 0;
@@ -7,15 +7,15 @@
 	top: 				12px;
 	z-index: 			1;
 }
-#jm-mailchimp-subscribe h1 {
+.jm-mailchimp-subscribe h1 {
 	font-weight: 	normal;
 	margin: 		0;
 	line-height: 	37px;
 }
-#jm-mailchimp-subscribe .text-input,
-#jm-mailchimp-subscribe .text-input:focus,
-#jm-mailchimp-subscribe .submit-button,
-#jm-mailchimp-subscribe .submit-button:focus {
+.jm-mailchimp-subscribe .text-input,
+.jm-mailchimp-subscribe .text-input:focus,
+.jm-mailchimp-subscribe .submit-button,
+.jm-mailchimp-subscribe .submit-button:focus {
 	width: 			98%;
 	border: 		1px solid #FFF;
 	background: 	transparent;
@@ -27,18 +27,18 @@
 	box-shadow: 	none;
 	outline: 		none;
 }
-#jm-mailchimp-subscribe .submit-button, 
-#jm-mailchimp-subscribe .close-validate-message {
+.jm-mailchimp-subscribe .submit-button, 
+.jm-mailchimp-subscribe .close-validate-message {
 	text-transform: uppercase;
 	cursor: 		pointer;
 }
 
 /* Checkboxes */
-#jm-mailchimp-subscribe .checkboxes {
+.jm-mailchimp-subscribe .checkboxes {
 	list-style: none;
 	padding-left: 0;
 }
-#jm-mailchimp-subscribe .checkboxes li {
+.jm-mailchimp-subscribe .checkboxes li {
 	display: inline-block;
 	height:  15px;
 	position: relative;
@@ -47,7 +47,7 @@
 	font-size: 16px;
 	cursor: pointer;
 }
-#jm-mailchimp-subscribe .checkboxes li:before {
+.jm-mailchimp-subscribe .checkboxes li:before {
 	height: 15px;
 	width: 15px;
 	border: 1px solid #FFF;
@@ -57,25 +57,25 @@
 	top: 0px;
 	z-index: -1;
 }
-#jm-mailchimp-subscribe .checkboxes li.active:before {
+.jm-mailchimp-subscribe .checkboxes li.active:before {
 	background: #FFF;
 }
-#jm-mailchimp-subscribe .checkboxes li label {
+.jm-mailchimp-subscribe .checkboxes li label {
 	/*margin-left: 25px;*/
 	padding-left: 25px;
 	cursor: pointer;
 }
-#jm-mailchimp-subscribe .checkboxes input {
+.jm-mailchimp-subscribe .checkboxes input {
 	display: none;
 }
 
 /* Columns */
-#jm-mailchimp-subscribe .col-sm-5,
-#jm-mailchimp-subscribe .col-sm-2{
+.jm-mailchimp-subscribe .col-sm-5,
+.jm-mailchimp-subscribe .col-sm-2{
 	padding: 0;
 }
 
-#jm-mailchimp-subscribe .close-validate-message{
+.jm-mailchimp-subscribe .close-validate-message{
 	display: 		inline-block;
 	width: 			67px;
 	margin-left: 	10px;
@@ -96,14 +96,14 @@
 
 /* Medium screens */
 @media (min-width: 996px){
-	#jm-mailchimp-subscribe .text-input {
+	.jm-mailchimp-subscribe .text-input {
 		margin-bottom: 0;
 	}
 }
 
 /* Large screens */
 @media (min-width: 1200px){
-	#jm-mailchimp-subscribe .container {
+	.jm-mailchimp-subscribe .container {
 		background: url('images/side-image.png') no-repeat;
 		background-position: 45px 0;
 	}

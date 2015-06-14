@@ -1,20 +1,20 @@
 jQuery(document).ready(function(){
 
 	// Trigger checkboxes
-	jQuery('#jm-mailchimp-subscribe .checkboxes input:checkbox').click(function(){
+	jQuery('.jm-mailchimp-subscribe .checkboxes input:checkbox').click(function(){
 		jQuery(this).closest('li').toggleClass('active');
 	});
 
 	// Close validation message
 	jQuery('.close-validate-message').click(function(){
-		jQuery('#jm-mailchimp-subscribe form').show();
-		jQuery('#jm-mailchimp-subscribe .validate').hide();
+		jQuery('.jm-mailchimp-subscribe form').show();
+		jQuery('.jm-mailchimp-subscribe .validate').hide();
 	});
 
-	jQuery('#jm-mailchimp-subscribe form').submit(function( event ){
-		var validate_note = jQuery('#jm-mailchimp-subscribe .validate');
-		var thank_you = jQuery('#jm-mailchimp-subscribe .thank-you');
-		var error = jQuery('#jm-mailchimp-subscribe .error');
+	jQuery('.jm-mailchimp-subscribe form').submit(function( event ){
+		var validate_note = jQuery('.jm-mailchimp-subscribe .validate');
+		var thank_you = jQuery('.jm-mailchimp-subscribe .thank-you');
+		var error = jQuery('.jm-mailchimp-subscribe .error');
 		
 		// Hide form
 		
