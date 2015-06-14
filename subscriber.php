@@ -6,6 +6,13 @@
 * Author: Joakim & Mikael
 **/
 
+
+/* --------------------------------
+
+Plugin settings page
+
+---------------------------------- */
+
 function my_plugin_subscriber_newsletter() {
 	add_menu_page(
 		'My Plugin Settings', 
@@ -168,6 +175,13 @@ function my_plugin_settings() {
 add_action( 'admin_init', 'my_plugin_settings' );
 add_action( 'admin_menu', 'my_plugin_subscriber_newsletter' );
 
+
+/* --------------------------------
+
+Handle AJAX request
+
+---------------------------------- */
+
 // Ajax call
 add_action( 'wp_ajax_ajax_subscribersubmit', 'ajax_subscribersubmit' );
 add_action( 'wp_ajax_nopriv_ajax_subscribersubmit', 'ajax_subscribersubmit' );
@@ -228,7 +242,7 @@ function ajax_subscribersubmit(){
 	die();
 }
 
-function display_form() {
+/*function display_form() {
 
 	add_thickbox(); ?>
 
@@ -398,7 +412,7 @@ function display_form() {
 	</div>
 
 	<?php
-}
+}*/
 
 
 /* --------------------------------
@@ -407,28 +421,26 @@ Register and mount CSS & Javascript
 
 ---------------------------------- */
 
-function jm_mailchimp_register_style(){
+function jm_mailchimp_register_script(){
 	
-	wp_register_style( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.css'), array(), '1.1', 'all' );
+	wp_register_style( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.css'), array(), '1.2', 'all' );
 	wp_register_script( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.js'), array('jquery'), '1.0', true );
+	wp_register_script( 'bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js', 'jquery', null, true);
 	
 	wp_enqueue_style( 'mailchimp-subscriber' );
 	wp_enqueue_script( 'mailchimp-subscriber' );
+	wp_enqueue_script( 'bootstrap' );
 }
-add_action('wp_enqueue_scripts', 'jm_mailchimp_register_style');
+add_action('wp_enqueue_scripts', 'jm_mailchimp_register_script');
 
 
 /* --------------------------------
 
-Form HTML 
+Footer form HTML 
 
 --------------------------------- */
 
-function display_footer_form(){ 
-
-	// Register and enqueue Bootstrap
-	wp_register_script( 'bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js', 'jquery');
-	wp_enqueue_script( 'bootstrap' );
+function display_footer_form(){
 
 	// Get list name from id
 	function getListName( $id ){
@@ -458,102 +470,106 @@ function display_footer_form(){
 <div id="jm-mailchimp-subscribe">
 	<div class="container">
 		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2">
 		
-			<?php // Form ?>
-			<form action="/wp-admin/admin-ajax.php" method="post">
-				<input type="hidden" name="register">
-				
-				<?php // Heading ?>
-				<div class="col-lg-12">
-					<h1><?php echo get_option('subscriber_form_heading'); ?></h1>
-				</div>
-
-				<div class="col-lg-6">
-
-					<?php
-						$list1_id = get_option( 'subscriber_select_list_1' );
-						$list2_id = get_option( 'subscriber_select_list_2' );
-						$list3_id = get_option( 'subscriber_select_list_3' );
-					?>
+				<?php // Form ?>
+				<form action="/wp-admin/admin-ajax.php" method="post">
+					<input type="hidden" name="register">
 					
-					<?php // Only first list selected; show no checkboxes! ?>
-					<?php if( $list1_id && ( !$list2_id && !$list3_id ) ){ ?>
-							<?php /*<input type="hidden" name="list1_id" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>">*/ ?>
-							<input type="hidden" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>">
-					<?php } else { ?>
-						<ul class="checkboxes">
-								
-							<?php // List #1 ?>
-							<?php if(get_option( 'subscriber_select_list_1' )){ ?>
-							<li>
-								<input type="checkbox" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>" class="checkbox">
-								<label for="list1_id"><?php echo getListName(get_option( 'subscriber_select_list_1' )); ?></label>
-							</li>
-							<?php } ?>
+					<?php // Heading ?>
+					<div class="col-lg-12">
+						<h1><?php echo get_option('subscriber_form_heading'); ?></h1>
+					</div>
 
-							<?php // List #2 ?>
-							<?php if(get_option( 'subscriber_select_list_2' )){ ?>
-							<li>
-								<label for="list2_id">
-									<?php /*<input type="checkbox" name="list2_id" id="list2_id" value="<?php echo get_option('subscriber_select_list_2'); ?>">*/ ?>
-									<input type="checkbox" name="subscriptions" id="list2_id" value="<?php echo get_option('subscriber_select_list_2'); ?>" class="checkbox">
-									<?php echo getListName(get_option( 'subscriber_select_list_2' )); ?>
-								</label>
-							</li>
-							<?php } ?>
-					
-							<?php // List #3 ?>
-							<?php if(get_option( 'subscriber_select_list_3' )){ ?>
-							<li>
-								<label for="list3_id">
-									<?php /*<input type="checkbox" name="list3_id" id="list3_id" value="<?php echo get_option('subscriber_select_list_3'); ?>">*/ ?>
-									<input type="checkbox" name="subscriptions" id="list3_id" value="<?php echo get_option('subscriber_select_list_3'); ?>" class="checkbox">
-									<?php echo getListName(get_option( 'subscriber_select_list_3' )); ?>
-								</label>
-							</li>
-							<?php } ?>
-
-						</ul>
-					<?php } ?>
-				</div>
-
-				<div class="col-lg-6">
 					<div class="row">
+						<div class="col-lg-6">
 
-						<?php // Name ?>
-						<div class="col-sm-5">
-							<input type="text" name="name" placeholder="Name" class="text-input" data-toggle="tooltip" data-placement="top" title="Please enter your name!">
+							<?php
+								$list1_id = get_option( 'subscriber_select_list_1' );
+								$list2_id = get_option( 'subscriber_select_list_2' );
+								$list3_id = get_option( 'subscriber_select_list_3' );
+							?>
+							
+							<?php // Only first list selected; show no checkboxes! ?>
+							<?php if( $list1_id && ( !$list2_id && !$list3_id ) ){ ?>
+									<?php /*<input type="hidden" name="list1_id" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>">*/ ?>
+									<input type="hidden" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>">
+							<?php } else { ?>
+								<ul class="checkboxes">
+										
+									<?php // List #1 ?>
+									<?php if(get_option( 'subscriber_select_list_1' )){ ?>
+									<li>
+										<input type="checkbox" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>" class="checkbox">
+										<label for="list1_id"><?php echo getListName(get_option( 'subscriber_select_list_1' )); ?></label>
+									</li>
+									<?php } ?>
+
+									<?php // List #2 ?>
+									<?php if(get_option( 'subscriber_select_list_2' )){ ?>
+									<li>
+										<label for="list2_id">
+											<?php /*<input type="checkbox" name="list2_id" id="list2_id" value="<?php echo get_option('subscriber_select_list_2'); ?>">*/ ?>
+											<input type="checkbox" name="subscriptions" id="list2_id" value="<?php echo get_option('subscriber_select_list_2'); ?>" class="checkbox">
+											<?php echo getListName(get_option( 'subscriber_select_list_2' )); ?>
+										</label>
+									</li>
+									<?php } ?>
+							
+									<?php // List #3 ?>
+									<?php if(get_option( 'subscriber_select_list_3' )){ ?>
+									<li>
+										<label for="list3_id">
+											<?php /*<input type="checkbox" name="list3_id" id="list3_id" value="<?php echo get_option('subscriber_select_list_3'); ?>">*/ ?>
+											<input type="checkbox" name="subscriptions" id="list3_id" value="<?php echo get_option('subscriber_select_list_3'); ?>" class="checkbox">
+											<?php echo getListName(get_option( 'subscriber_select_list_3' )); ?>
+										</label>
+									</li>
+									<?php } ?>
+
+								</ul>
+							<?php } ?>
 						</div>
 
-						<?php // Email ?>
-						<div class="col-sm-5">
-							<input type="email" name="email" placeholder="Email" class="text-input" data-toggle="tooltip" data-placement="top" title="Please enter your email!">
-						</div>
+						<div class="col-lg-6">
+							<div class="row">
 
-						<?php // Button ?>
-						<div class="col-sm-2">
-							<input type="submit" value="Send" class="submit-button">
+								<?php // Name ?>
+								<div class="col-sm-5">
+									<input type="text" name="name" placeholder="Name" class="text-input" data-toggle="tooltip" data-placement="top" title="Please enter your name!">
+								</div>
+
+								<?php // Email ?>
+								<div class="col-sm-5">
+									<input type="email" name="email" placeholder="Email" class="text-input" data-toggle="tooltip" data-placement="top" title="Please enter your email!">
+								</div>
+
+								<?php // Button ?>
+								<div class="col-sm-2">
+									<input type="submit" value="Send" class="submit-button">
+								</div>
+							</div>
 						</div>
 					</div>
+				</form>
+
+				<?php // Thank you note ?>
+				<div class="thank-you" style="display: none;">
+					<h1>Thank you!</h1>
+					<p><span class="email-placeholder">[email]</span> successfuly added to subsriber list.</p>
 				</div>
-			</form>
 
-			<?php // Thank you note ?>
-			<div class="thank-you" style="display: none;">
-				<h1>Thank you!</h1>
-				<p><span class="email-placeholder">[email]</span> successfuly added to subsriber list.</p>
-			</div>
+				<?php // Error note ?>
+				<div class="error" style="display: none;">
+					<h1>Oops!</h1>
+					<p>There was a technical error. Try again later.</p>
+				</div>
 
-			<?php // Error note ?>
-			<div class="error" style="display: none;">
-				<h1>Oops!</h1>
-				<p>There was a technical error. Try again later.</p>
-			</div>
-
-			<?php // Validation note ?>
-			<div class="validate" style="display: none;">
-				<h1>Please fill in a subscription list, name and an email address!
-				<a href="javascript:;" class="close-validate-message">OK</a></h1>
+				<?php // Validation note ?>
+				<div class="validate" style="display: none;">
+					<h1>Please fill in a subscription list, name and an email address!
+					<a href="javascript:;" class="close-validate-message">OK</a></h1>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -565,6 +581,7 @@ function display_footer_form(){
 // Display form if plugin is activated in settings
 if(get_option('subscriber_isactive_checkbox') == 'on'){
 	//add_action('wp_footer', 'display_form');
-	add_action('wp_footer', 'display_footer_form');
+	//add_action( 'wp_footer', 'display_footer_form', 0 );
+	add_action( 'wp_footer', 'display_footer_form' );
 }
 ?>
