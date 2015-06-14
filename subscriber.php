@@ -430,7 +430,7 @@ Footer form HTML
 
 --------------------------------- */
 
-function display_footer_form(){
+function jm_mailchimp_subscribe_form(){
 
 	// Get list name from id
 	function getListName( $id ){
@@ -455,6 +455,9 @@ function display_footer_form(){
 
 		return $list_name;
 	}
+	
+	// Display form if activated in admin
+	if(get_option('subscriber_isactive_checkbox') == 'on'){
 ?>
 
 <div id="jm-mailchimp-subscribe">
@@ -563,11 +566,12 @@ function display_footer_form(){
 </div>
 
 <?php
+	}
 }
 
 // Display form if plugin is activated in settings
-if(get_option('subscriber_isactive_checkbox') == 'on'){
+/*if(get_option('subscriber_isactive_checkbox') == 'on'){
 	//add_action('wp_footer', 'display_form');
-	add_action( 'wp_footer', 'display_footer_form' );
-}
+	add_action( 'wp_footer', 'jm_mailchimp_subscribe_form' );
+}*/
 ?>
