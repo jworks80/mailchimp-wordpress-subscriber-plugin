@@ -200,15 +200,11 @@ function ajax_subscribersubmit(){
 	$MailChimp = new \Drewm\MailChimp('b08e782231147b0c03d797cd924f007d-us9');
 
 	// Loop subscriptions
-	//$success = false;
 	$subscriptions 		= $_POST['subscriptions'];
-	//$success_counter 	= 0;
 	foreach( $subscriptions as $subscription ){
 
 		// Make the call
 		$result = $MailChimp->call('lists/subscribe', array(
-		    //'id'                => $currentSubscriberListID,
-		    //'id'                => $subscription['value'],
 		    'id'                => $subscription,
 		    'email'             => array('email'=> $_POST['email']),
 		    'merge_vars'        => array('FNAME'=> $_POST['name']),
@@ -219,8 +215,6 @@ function ajax_subscribersubmit(){
 		));
 
 		if( $result['leid'] ){
-			//$success = true;
-			//$success_counter++;
 			$results[] = $result;
 		}
 	}
@@ -229,11 +223,7 @@ function ajax_subscribersubmit(){
 	header( 'Content-Type: application/json' );
 
 	// Echo response
-	//if( $result['leid'] ){
-	//if( $success ){
-	//if( $success_counter > 0 ){
 	if( count($results) > 0 ){
-		//echo json_encode( $result );
 		echo json_encode(array( 'success' => true, 'response' => $results ));
 	} else {
 		echo json_encode(array( 'success' => false, 'response' => $results ));
@@ -492,7 +482,6 @@ function display_footer_form(){
 							
 							<?php // Only first list selected; show no checkboxes! ?>
 							<?php if( $list1_id && ( !$list2_id && !$list3_id ) ){ ?>
-									<?php /*<input type="hidden" name="list1_id" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>">*/ ?>
 									<input type="hidden" name="subscriptions" id="list1_id" value="<?php echo get_option('subscriber_select_list_1'); ?>">
 							<?php } else { ?>
 								<ul class="checkboxes">
@@ -509,7 +498,6 @@ function display_footer_form(){
 									<?php if(get_option( 'subscriber_select_list_2' )){ ?>
 									<li>
 										<label for="list2_id">
-											<?php /*<input type="checkbox" name="list2_id" id="list2_id" value="<?php echo get_option('subscriber_select_list_2'); ?>">*/ ?>
 											<input type="checkbox" name="subscriptions" id="list2_id" value="<?php echo get_option('subscriber_select_list_2'); ?>" class="checkbox">
 											<?php echo getListName(get_option( 'subscriber_select_list_2' )); ?>
 										</label>
@@ -520,7 +508,6 @@ function display_footer_form(){
 									<?php if(get_option( 'subscriber_select_list_3' )){ ?>
 									<li>
 										<label for="list3_id">
-											<?php /*<input type="checkbox" name="list3_id" id="list3_id" value="<?php echo get_option('subscriber_select_list_3'); ?>">*/ ?>
 											<input type="checkbox" name="subscriptions" id="list3_id" value="<?php echo get_option('subscriber_select_list_3'); ?>" class="checkbox">
 											<?php echo getListName(get_option( 'subscriber_select_list_3' )); ?>
 										</label>
@@ -581,7 +568,6 @@ function display_footer_form(){
 // Display form if plugin is activated in settings
 if(get_option('subscriber_isactive_checkbox') == 'on'){
 	//add_action('wp_footer', 'display_form');
-	//add_action( 'wp_footer', 'display_footer_form', 0 );
 	add_action( 'wp_footer', 'display_footer_form' );
 }
 ?>
