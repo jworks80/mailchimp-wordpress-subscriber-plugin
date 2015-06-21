@@ -1,8 +1,8 @@
 jQuery(document).ready(function(){
 
 	// Trigger checkboxes
-	jQuery('.jm-mailchimp-subscribe .checkboxes input:checkbox').click(function(){
-		jQuery(this).closest('li').toggleClass('active');
+	jQuery('.jm-mailchimp-subscribe .checkboxes input:checkbox').on('click',function(){
+		jQuery(this).parent('li').toggleClass('active');
 	});
 
 	// Close validation message
@@ -10,11 +10,19 @@ jQuery(document).ready(function(){
 		jQuery('.jm-mailchimp-subscribe form').show();
 		jQuery('.jm-mailchimp-subscribe .validate').hide();
 	});
+	
+	// submit button
+	jQuery('.jm-mailchimp-subscribe .submit-button').on('click', function( event ){
+		jQuery(event.currentTarget).closest('form').submit();
+		return false;
+	});	
 
-	jQuery('.jm-mailchimp-subscribe form').submit(function( event ){
-		var validate_note = jQuery('.jm-mailchimp-subscribe .validate');
-		var thank_you = jQuery('.jm-mailchimp-subscribe .thank-you');
-		var error = jQuery('.jm-mailchimp-subscribe .error');
+	jQuery('.jm-mailchimp-subscribe form').on('submit', function( event ){
+	
+		var currentTarget = event.currentTarget;
+		var validate_note = jQuery(currentTarget).closest('.jm-mailchimp-subscribe').find('.validate');
+		var thank_you = jQuery(currentTarget).closest('.jm-mailchimp-subscribe').find('.thank-you');
+		var error = jQuery(currentTarget).closest('.jm-mailchimp-subscribe').find('.error');
 		
 		// Hide form
 		
@@ -24,7 +32,7 @@ jQuery(document).ready(function(){
 		event.preventDefault();
 
 		subscriptions = [];
-		jQuery('input:checkbox[name=subscriptions]:checked, input:hidden[name=subscriptions]', form).each(function( index ){
+		jQuery(currentTarget).find('input:checkbox[name=subscriptions]:checked, input:hidden[name=subscriptions]', form).each(function( index ){
 			if( jQuery(this).val() != '' ){
 				subscriptions.push( jQuery(this).val() );
 			}
@@ -33,8 +41,8 @@ jQuery(document).ready(function(){
 		// Collect vars
 		var form 			= jQuery(this);
 		var action 			= form.attr('action');
-		var name 			= jQuery('input[name=name]', form).val();
-		var email 			= jQuery('input[name=email]', form).val();
+		var name 			= jQuery(currentTarget).find('input[name=name]', form).val();
+		var email 			= jQuery(currentTarget).find('input[name=email]', form).val();
 		var formData 		= {
 			action: 'ajax_subscribersubmit',
 			subscriptions: subscriptions,
@@ -58,7 +66,6 @@ jQuery(document).ready(function(){
 			
 			form.hide();
 			validate_note.show();
-			
 			return false;
 		}
 
@@ -72,12 +79,11 @@ jQuery(document).ready(function(){
 			
 			form.hide();
 			validate_note.show();
-			
 			return false;
 		}
 		
 		// Change submit button text
-		jQuery('.submit-button', form).val('Sending...');
+		jQuery(currentTarget).find('.submit-button', form).val('Sending...');
 
 		// Send form
 		jQuery.ajax({
@@ -86,15 +92,13 @@ jQuery(document).ready(function(){
 			method: 'post',
 			success: function( response ) {
 				if( response.success === true ){
-
 					// Remove spinner
 
 					// Thank you message
 					form.hide();
-					jQuery('.email-placeholder', thank_you).text(email);
+					jQuery(currentTarget).closest('.jm-mailchimp-subscribe').find('.email-placeholder', thank_you).text(email);
 					thank_you.show();
 				} else {
-
 					// Remove spinner
 					
 					// Show error note
@@ -103,5 +107,6 @@ jQuery(document).ready(function(){
 				}
 			}
 		});
+		return false;
 	});
 });

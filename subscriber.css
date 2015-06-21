@@ -1,16 +1,18 @@
 .jm-mailchimp-subscribe { 
-	background-color: 	#82F5D0;
 	color: 				#FFF;
 	padding: 			20px 0;
 	font-family: 		"Antic Slab", Arial, Helvetica, sans-serif;
 	position: 			relative;
-	top: 				12px;
 	z-index: 			1;
+	margin: 			0 auto;
+  	max-width: 			940px;
 }
+.post-content .jm-mailchimp-subscribe h1,
 .jm-mailchimp-subscribe h1 {
 	font-weight: 	normal;
 	margin: 		0;
 	line-height: 	37px;
+	color: #FFF;
 }
 .jm-mailchimp-subscribe .text-input,
 .jm-mailchimp-subscribe .text-input:focus,
@@ -104,7 +106,7 @@
 /* Large screens */
 @media (min-width: 1200px){
 	.jm-mailchimp-subscribe .container {
-		background: url('images/side-image.png') no-repeat;
+		background-repeat: no-repeat;
 		background-position: 45px 0;
 	}
 }
