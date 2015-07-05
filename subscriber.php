@@ -15,11 +15,11 @@ Plugin settings page
 
 function my_plugin_subscriber_newsletter() {
 	add_menu_page(
-		'My Plugin Settings', 
-		'Subscriber settings', 
-		'administrator', 
-		'my-subscriber-newsletter-settings-plugin', 
-		'my_subscriber_newsletter_settings_page', 
+		'My Plugin Settings',
+		'Subscriber settings',
+		'administrator',
+		'my-subscriber-newsletter-settings-plugin',
+		'my_subscriber_newsletter_settings_page',
 		'dashicons-admin-generic'
 	);
 }
@@ -28,18 +28,18 @@ function my_subscriber_newsletter_settings_page(){
 
 	require_once('src/Drewm/MailChimp.php');
 
-	// Your Mailchimp API Key 
+	// Your Mailchimp API Key
 	$api = 'b08e782231147b0c03d797cd924f007d-us9';
-	
+
 	// Initializing the $MailChimp object
 	$MailChimp = new \Drewm\MailChimp($api);
 	$lists = $MailChimp->call('lists/list', array(
 	  "filters" => array(),
 	  "sort_dir" => "DESC"
 	)); ?>
-	
+
 	<div class="wrap">
-		
+
 		<div class="header">
 			<h2>Subscriber Mailchimp settings</h2>
 		</div>
@@ -53,53 +53,53 @@ function my_subscriber_newsletter_settings_page(){
 			    <h3>Options</h3>
 
 			    <p>Shortcode: [subscriber_shortcode]</p>
-				
+
 				<?php /* Form heading */ ?>
 		    	<p>
 		    		<label for="subscriber_form_heading" style="padding-right:5px;">Subscriber form heading</label>
 		    		<input type="text" id="subscriber_form_heading" name="subscriber_form_heading" value="<?php echo ( get_option('subscriber_form_heading') ? get_option('subscriber_form_heading') : '' ); ?>" style="width: 300px;" />
 		    	</p>
-				
+
 				<?php // Background color ?>
 		    	<p>
 		    		<label for="subscriber_background_color">Background color: </label>
 		    		<input type="text" id="subscriper_background_color" name="subscriber_background_color" style="width: 150px;" value="<?php echo ( get_option('subscriber_background_color') ? get_option('subscriber_background_color') : '' ); ?>" />
 		    	</p>
-				
+
 				<?php // Background image ?>
 		    	<p>
 		    		<label for="subscriber_side_image">Side image: </label>
 		    		<input type="text" id="subscriper_side_image" name="subscriber_side_image" style="width: 300px;" value="<?php echo ( get_option('subscriber_side_image') ? get_option('subscriber_side_image') : '' ); ?>" />
 		    	</p>
-			    
+
 			    <?php // Enable footer form checkbox ?>
 			    <p>
 				    <label for="subscriber_isactive_checkbox" style="padding-right:5px;">Enable footer signup</label>
-				    <input type="checkbox" 
-				    	name="subscriber_isactive_checkbox" 
-				    	id="subscriber_isactive_checkbox" 
+				    <input type="checkbox"
+				    	name="subscriber_isactive_checkbox"
+				    	id="subscriber_isactive_checkbox"
 				    	style="position:relative; top:2px"
 				    	value="on"
-				    	<?php echo get_option('subscriber_isactive_checkbox') == 'on' ? 'checked':''; ?> 
+				    	<?php echo get_option('subscriber_isactive_checkbox') == 'on' ? 'checked':''; ?>
 				    />
 				</p>
-			    
+
 			    <?php // Enable popup form checkbox ?>
 			    <?php /*<p>
 				    <label for="subscriber_popup_isactive_checkbox" style="padding-right:5px;">Enable popup signup</label>
-				    <input type="checkbox" 
-				    	name="subscriber_popup_isactive_checkbox" 
-				    	id="subscriber_popup_isactive_checkbox" 
+				    <input type="checkbox"
+				    	name="subscriber_popup_isactive_checkbox"
+				    	id="subscriber_popup_isactive_checkbox"
 				    	style="position:relative; top:2px"
 				    	value="on"
-				    	<?php echo get_option('subscriber_popup_isactive_checkbox') == 'on' ? 'checked':''; ?> 
+				    	<?php echo get_option('subscriber_popup_isactive_checkbox') == 'on' ? 'checked':''; ?>
 				    />
 				</p>
 
 				<hr>*/ ?>
 
 		    	<hr>
-				
+
 				<?php // Signup form #1 ?>
 				<p>
 					<label style="padding-right:5px;" for="subscriber_select_list_1">Choose Mailchimp subscriberlist #1</label>
@@ -119,7 +119,7 @@ function my_subscriber_newsletter_settings_page(){
 				    </select>
 				    <i>If only this list is selected, no checkboxes will show in signup form.</i>
 			    <p>
-				
+
 				<?php // Signup form #2 ?>
 				<p>
 					<label style="padding-right:5px;" for="subscriber_select_list_2">Choose Mailchimp subscriberlist #2</label>
@@ -138,7 +138,7 @@ function my_subscriber_newsletter_settings_page(){
 						?>
 				    </select>
 				</p>
-				
+
 				<?php // Signup form #3 ?>
 				<p>
 					<label style="padding-right:5px;" for="subscriber_select_list_3">Choose Mailchimp subscriberlist #3</label>
@@ -159,20 +159,20 @@ function my_subscriber_newsletter_settings_page(){
 				</p>
 
 				<hr>
-		    	
+
 		    	<?php // Popup delay ?>
 		    	<?php /*<label for="subscriber_form_delay" style="padding-right:5px;">Subscriber form delay (ms)</label>
 		   		<input type="text" id="subscriber_form_delay" name="subscriber_form_delay" value="<?php echo (get_option('subscriber_form_delay') ? get_option('subscriber_form_delay') : 5000 ); ?>" style="width: 75px;" />
-		   	
+
 		   		<hr>*/ ?>
 
 		    	<?php submit_button(); ?>
-		 
+
 			</form>
 		</div>
 	</div>
 
-<?php 
+<?php
 }
 
 function my_plugin_settings() {
@@ -233,7 +233,7 @@ function ajax_subscribersubmit(){
 			$results[] = $result;
 		}
 	}
-	
+
 	// Set JSON headers
 	header( 'Content-Type: application/json' );
 
@@ -257,7 +257,7 @@ function ajax_subscribersubmit(){
 				var date = new Date();
 				date.setTime(date.getTime()+(days*24*60*60*1000));
 				var expires = "; expires="+date.toGMTString();
-			} else { 
+			} else {
 				var expires = "";
 				document.cookie = name+"="+value+expires+"; path=/";
 			}
@@ -334,7 +334,7 @@ function ajax_subscribersubmit(){
 							// Set permanent cookie
 							createCookie('AshleyCooper-VisitorSubsribed', 'set', 3650);
 						} else {
-							
+
 							// Show error message
 							jQuery('#newsletter-thickbox-content .form').hide();
 							jQuery('#newsletter-thickbox-content .error').show();
@@ -344,7 +344,7 @@ function ajax_subscribersubmit(){
 			});
 		});
 	</script>
-	
+
 	<div id="newsletter-thickbox" style="display: none;">
 		<style>
 			#newsletter-thickbox-content .left {
@@ -432,7 +432,7 @@ function jm_mailchimp_register_script(){
 	wp_register_style( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.css'), array(), '1.3', 'all' );
 	wp_register_script( 'mailchimp-subscriber', plugins_url('mailchimp-wordpress-subscriber-plugin/subscriber.js'), array('jquery'), '1.1', true );
 	wp_register_script( 'bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js', 'jquery', null, true);
-	
+
 	// Enqueue
 	wp_enqueue_style( 'mailchimp-subscriber' );
 	wp_enqueue_script( 'mailchimp-subscriber' );
@@ -445,9 +445,9 @@ add_action('wp_enqueue_scripts', 'jm_mailchimp_register_script');
 function getListName( $id ){
 	require_once('src/Drewm/MailChimp.php');
 
-	// Your Mailchimp API Key 
+	// Your Mailchimp API Key
 	$api = 'b08e782231147b0c03d797cd924f007d-us9';
-	
+
 	// Initializing the $MailChimp object
 	$MailChimp = new \Drewm\MailChimp($api);
 	$lists = $MailChimp->call('lists/list', array(
@@ -472,17 +472,15 @@ function form($id){ ?>
 		<div class="container" style="background-image: url('<?php echo get_option( "subscriber_side_image" ); ?>')" />
 			<div class="row">
 				<div class="col-lg-8 col-lg-offset-2">
-			
+
 					<?php // Form ?>
 					<form action="/wp-admin/admin-ajax.php" method="post">
 						<input type="hidden" name="register">
-						
-						<?php // Heading ?>
-						<div class="col-lg-12">
-							<h1><?php echo get_option('subscriber_form_heading'); ?></h1>
-						</div>
 
-						<div class="row">
+						<?php // Heading ?>
+						<h1><?php echo get_option('subscriber_form_heading'); ?></h1>
+
+						<div class="row" style="position: relative">
 							<div class="col-lg-6">
 
 								<?php
@@ -490,13 +488,13 @@ function form($id){ ?>
 									$list2_id = get_option( 'subscriber_select_list_2' );
 									$list3_id = get_option( 'subscriber_select_list_3' );
 								?>
-								
+
 								<?php // Only first list selected; show no checkboxes! ?>
 								<?php if( $list1_id && ( !$list2_id && !$list3_id ) ){ ?>
 										<input type="hidden" name="subscriptions" id="list1_id_<?php echo $id; ?>" value="<?php echo get_option('subscriber_select_list_1'); ?>">
 								<?php } else { ?>
 									<ul class="checkboxes">
-											
+
 										<?php // List #1 ?>
 										<?php if(get_option( 'subscriber_select_list_1' )){ ?>
 										<li>
@@ -512,7 +510,7 @@ function form($id){ ?>
 											<label for="list2_id_<?php echo $id; ?>"><?php echo getListName(get_option( 'subscriber_select_list_2' )); ?></label>
 										</li>
 										<?php } ?>
-								
+
 										<?php // List #3 ?>
 										<?php if(get_option( 'subscriber_select_list_3' )){ ?>
 										<li>
@@ -525,7 +523,7 @@ function form($id){ ?>
 								<?php } ?>
 							</div>
 
-							<div class="col-lg-6">
+							<div class="col-lg-6 input-fields">
 								<div class="row">
 
 									<?php // Name ?>
@@ -574,19 +572,19 @@ function form($id){ ?>
 
 /* --------------------------------
 
-Footer form HTML 
+Footer form HTML
 
 --------------------------------- */
 
 function jm_mailchimp_subscribe_form(){
-	
+
 	// Display form if activated in admin
 	if(get_option('subscriber_isactive_checkbox') == 'on'){
 		form('id1');
 	}
 }
 
-function jm_mailchimp_subscribe_form2(){	
+function jm_mailchimp_subscribe_form2(){
 	form('id2');
 }
 
